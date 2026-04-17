@@ -101,7 +101,7 @@ body::after {
 .gnav-docs { color: var(--text-secondary); }
 .gnav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .gnav-wallet { display: none; }
-.gnav-balance { display: none !important; }
+.gnav-balance { display: none; }
 .gnav-connect { font-size: 7px; padding: 8px 14px; }
 
 /* ─── SCREENS ─── */
