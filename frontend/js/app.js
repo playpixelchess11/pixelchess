@@ -61,11 +61,16 @@ const App = (() => {
     document.getElementById('btn-connect-nav')?.addEventListener('click', handleConnect);
     document.getElementById('btn-connect-hero')?.addEventListener('click', handleConnect);
 
+    document.getElementById('gnav-home')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      showScreen('landing');
+    });
+
     document.querySelectorAll('.gnav-btn[data-nav]').forEach(btn => {
       btn.addEventListener('click', () => {
         const target = btn.dataset.nav;
         if (target === 'lobby' && !Web3Manager.isConnected()) {
-          handleConnect();
+          document.getElementById('btn-connect-nav')?.click();
         } else {
           showScreen(target);
         }
