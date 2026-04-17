@@ -903,7 +903,7 @@ body::after {
 }
 
 /* ─── LOBBY TAB CONTENT ─── */
-.lobby-tab-content { padding-top: 24px; }
+.lobby-tab-content { padding-top: 24px; width: 100%; }
 
 /* ─── FIND MATCH LAYOUT ─── */
 .fm-layout {
