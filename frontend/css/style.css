@@ -55,8 +55,8 @@ body::after {
   background:
     repeating-linear-gradient(
       0deg,
-      transparent        0px 3px,
-      rgba(0,0,0,0.10)   3px 4px
+      transparent        0px 5px,
+      rgba(0,0,0,0.04)   5px 6px
     ),
     radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.40) 100%);
   pointer-events: none;
@@ -865,9 +865,9 @@ body::after {
 
 /* ─── LOBBY WRAP ─── */
 .lobby-wrap {
-  max-width: 960px;
-  margin: 28px auto;
-  padding: 0 24px;
+  max-width: 1000px;
+  margin: 32px auto;
+  padding: 0 32px;
   flex: 1;
 }
 
@@ -875,20 +875,23 @@ body::after {
 .lobby-tabs {
   display: flex;
   gap: 0;
-  margin: 20px 0 16px;
-  border: 2px solid rgba(41,121,255,0.25);
+  margin: 0 0 24px;
+  border: 1px solid rgba(41,121,255,0.25);
+  border-radius: 4px;
+  overflow: hidden;
 }
 .lobby-tab-btn {
   flex: 1;
   font-family: var(--font-pixel);
-  font-size: 8px;
-  padding: 10px;
+  font-size: 9px;
+  padding: 14px 10px;
   background: transparent;
   color: var(--text-secondary);
   border: none;
   cursor: pointer;
   letter-spacing: 1px;
   transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
 }
 .lobby-tab-btn.active {
   background: rgba(41,121,255,0.18);
@@ -966,15 +969,17 @@ body::after {
   justify-content: space-between;
   margin-bottom: 16px;
 }
-.open-games-list { display: flex; flex-direction: column; gap: 8px; }
+.open-games-list { display: flex; flex-direction: column; gap: 10px; min-height: 300px; }
 .games-empty, .games-loading {
   font-family: var(--font-ui);
   font-size: 14px;
   color: var(--text-secondary);
   text-align: center;
-  padding: 48px 24px;
+  padding: 80px 24px;
   border: 1px dashed rgba(41,121,255,0.2);
+  border-radius: 4px;
   line-height: 1.8;
+  flex: 1;
 }
 
 /* ─── GAME CARD ─── */
