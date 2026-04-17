@@ -1053,6 +1053,20 @@ body::after {
 .gc-time   { font-family: var(--font-ui); font-size: 11px; color: var(--text-dim); min-width: 60px; text-align: center; }
 .gc-join-btn { font-size: 8px; padding: 8px 14px; white-space: nowrap; }
 
+/* History card */
+.history-card { grid-template-columns: 1fr auto auto; }
+.history-winner { color: var(--text-primary); }
+.history-you-badge {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  background: var(--accent-green);
+  color: #000;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+.history-wager-lbl { color: var(--text-secondary); }
+.history-tx-btn { font-size: 7px; padding: 6px 10px; white-space: nowrap; }
+
 @media (max-width: 768px) {
   .fm-layout { grid-template-columns: 1fr; }
   .fm-right  { min-height: 200px; }

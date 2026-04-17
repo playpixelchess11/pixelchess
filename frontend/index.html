@@ -186,6 +186,7 @@
     <div class="lobby-tabs">
       <button class="lobby-tab-btn active" data-tab="findmatch">⚡ FIND MATCH</button>
       <button class="lobby-tab-btn" data-tab="browse">🏟 BROWSE LOBBY</button>
+      <button class="lobby-tab-btn" data-tab="history">📜 HISTORY</button>
     </div>
 
     <!-- ── TAB: FIND MATCH ── -->
@@ -239,6 +240,17 @@
             <p class="fm-wait-note">⚠ Refund available after 30 min if no match.</p>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: HISTORY ── -->
+    <div id="tab-history" class="lobby-tab-content" style="display:none">
+      <div class="browse-header">
+        <span class="section-title" style="margin:0">📜 MATCH HISTORY</span>
+        <button id="btn-refresh-history" class="btn btn-ghost">↻ REFRESH</button>
+      </div>
+      <div id="match-history-list" class="open-games-list">
+        <div class="games-empty">Connect wallet and click refresh to load match history.</div>
       </div>
     </div>
 

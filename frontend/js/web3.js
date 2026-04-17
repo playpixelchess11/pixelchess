@@ -133,6 +133,22 @@ const Web3Manager = (() => {
     return 'recent';
   }
 
+  // ── Match History ──────────────────────────────────────────────────────────
+  async function getMatchHistory() {
+    if (!contract) throw new Error("Contract not deployed yet");
+    const LOOKBACK = 50000; // ~28 hours on Base
+    const endedEvents = await contract.queryFilter(contract.filters.GameEnded(), -LOOKBACK);
+    return endedEvents
+      .map(e => ({
+        gameId:  e.args.gameId,
+        winner:  e.args.winner,
+        payout:  parseFloat(ethers.utils.formatEther(e.args.payout)).toFixed(4),
+        wager:   parseFloat(ethers.utils.formatEther(e.args.payout / 1.9)).toFixed(4),
+        txHash:  e.transactionHash,
+      }))
+      .reverse();
+  }
+
   // ── Get Game Data ───────────────────────────────────────────────────────────
   async function getGame(gameId) {
     if (!contract) throw new Error("Contract not deployed yet");
@@ -165,6 +181,7 @@ const Web3Manager = (() => {
     refundTimeout,
     getGame,
     getOpenGames,
+    getMatchHistory,
     getBalance,
     shortenAddress,
     getTxLink,

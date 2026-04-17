@@ -38,7 +38,9 @@ const App = (() => {
     );
     document.getElementById('tab-findmatch').style.display = tab === 'findmatch' ? '' : 'none';
     document.getElementById('tab-browse').style.display    = tab === 'browse'    ? '' : 'none';
+    document.getElementById('tab-history').style.display   = tab === 'history'   ? '' : 'none';
     if (tab === 'browse') loadOpenGames();
+    if (tab === 'history') loadMatchHistory();
   }
 
   function setFmState(state) {
@@ -70,6 +72,7 @@ const App = (() => {
 
     document.getElementById('btn-find-match')?.addEventListener('click', handleFindMatch);
     document.getElementById('btn-refresh-games')?.addEventListener('click', loadOpenGames);
+    document.getElementById('btn-refresh-history')?.addEventListener('click', loadMatchHistory);
     document.getElementById('btn-resign')?.addEventListener('click', handleResign);
     document.getElementById('btn-copy-invite')?.addEventListener('click', () => {
       const input = document.getElementById('waiting-invite-link');
@@ -241,6 +244,54 @@ const App = (() => {
       });
     } catch (err) {
       listEl.innerHTML = '<div class="games-empty">Error loading games: ' + (err.message || '') + '</div>';
+    }
+  }
+
+  // ── Match History ──────────────────────────────────────────────────────────
+  async function loadMatchHistory() {
+    const listEl = document.getElementById('match-history-list');
+    if (!listEl) return;
+
+    if (!Web3Manager.isConnected()) {
+      listEl.innerHTML = '<div class="games-empty">Connect your wallet to see match history.</div>';
+      return;
+    }
+    if (CONFIG.CONTRACT_ADDRESS === '0x0000000000000000000000000000000000000000') {
+      listEl.innerHTML = '<div class="games-empty">Contract not deployed yet.</div>';
+      return;
+    }
+
+    listEl.innerHTML = '<div class="games-loading">Loading history...</div>';
+
+    try {
+      const matches = await Web3Manager.getMatchHistory();
+
+      if (matches.length === 0) {
+        listEl.innerHTML = '<div class="games-empty">No completed games yet.</div>';
+        return;
+      }
+
+      listEl.innerHTML = '';
+      matches.forEach((m, i) => {
+        const card = document.createElement('div');
+        card.className = 'game-card history-card';
+        const isMe = m.winner.toLowerCase() === Web3Manager.getAccount().toLowerCase();
+        card.innerHTML = `
+          <div class="gc-player">
+            <span class="gc-icon">${isMe ? '🏆' : '♟'}</span>
+            <span class="gc-addr history-winner">${Web3Manager.shortenAddress(m.winner)}</span>
+            ${isMe ? '<span class="history-you-badge">YOU</span>' : ''}
+          </div>
+          <div class="gc-wager">
+            <span class="gc-eth">+${m.payout} ETH</span>
+            <span class="gc-win history-wager-lbl">WAGER ${m.wager} ETH</span>
+          </div>
+          <a href="${Web3Manager.getTxLink(m.txHash)}" target="_blank" class="btn btn-ghost history-tx-btn">TX ↗</a>
+        `;
+        listEl.appendChild(card);
+      });
+    } catch (err) {
+      listEl.innerHTML = '<div class="games-empty">Error loading history: ' + (err.message || '') + '</div>';
     }
   }
 
