@@ -30,6 +30,10 @@ const App = (() => {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const el = document.getElementById('screen-' + name);
     if (el) el.classList.add('active');
+    document.querySelectorAll('.gnav-btn[data-nav]').forEach(b =>
+      b.classList.toggle('active', b.dataset.nav === name)
+    );
+    if (name === 'leaderboard') loadLeaderboard();
   }
 
   function switchLobbyTab(tab) {
@@ -54,8 +58,21 @@ const App = (() => {
 
   // ── Event Listeners ───────────────────────────────────────────────────────
   function setupEventListeners() {
-    document.getElementById('btn-connect-landing')?.addEventListener('click', handleConnect);
-    document.getElementById('btn-connect-landing-2')?.addEventListener('click', handleConnect);
+    document.getElementById('btn-connect-nav')?.addEventListener('click', handleConnect);
+    document.getElementById('btn-connect-hero')?.addEventListener('click', handleConnect);
+
+    document.querySelectorAll('.gnav-btn[data-nav]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.nav;
+        if (target === 'lobby' && !Web3Manager.isConnected()) {
+          handleConnect();
+        } else {
+          showScreen(target);
+        }
+      });
+    });
+
+    document.getElementById('btn-refresh-lb')?.addEventListener('click', loadLeaderboard);
 
     document.querySelectorAll('.wager-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -103,6 +120,8 @@ const App = (() => {
       updateWalletUI(account);
       const bal = await Web3Manager.getBalance();
       document.querySelectorAll('.balance-chip').forEach(el => el.textContent = bal + ' ETH');
+      const gnavBal = document.querySelector('.gnav-balance');
+      if (gnavBal) { gnavBal.textContent = bal + ' ETH'; gnavBal.style.display = ''; }
 
       if (window._pendingInviteGameId) {
         const inviteId = window._pendingInviteGameId;
@@ -133,6 +152,18 @@ const App = (() => {
     document.querySelectorAll('.wallet-status').forEach(el =>
       el.classList.toggle('connected', !!account)
     );
+    const connectBtn = document.getElementById('btn-connect-nav');
+    const gnavWallet = document.querySelector('.gnav-wallet');
+    const gnavBal    = document.querySelector('.gnav-balance');
+    if (account) {
+      if (connectBtn) connectBtn.style.display = 'none';
+      if (gnavWallet) gnavWallet.style.display = '';
+      if (gnavBal)    gnavBal.style.display = '';
+    } else {
+      if (connectBtn) connectBtn.style.display = '';
+      if (gnavWallet) gnavWallet.style.display = 'none';
+      if (gnavBal)    gnavBal.style.display = 'none';
+    }
   }
 
   // ── Find Match (auto-matchmaking) ──────────────────────────────────────────
@@ -244,6 +275,52 @@ const App = (() => {
       });
     } catch (err) {
       listEl.innerHTML = '<div class="games-empty">Error loading games: ' + (err.message || '') + '</div>';
+    }
+  }
+
+  // ── Leaderboard ────────────────────────────────────────────────────────────
+  async function loadLeaderboard() {
+    const listEl = document.getElementById('lb-list');
+    if (!listEl) return;
+
+    if (!Web3Manager.isConnected()) {
+      listEl.innerHTML = '<div class="games-empty">Connect wallet to load leaderboard.</div>';
+      return;
+    }
+    if (CONFIG.CONTRACT_ADDRESS === '0x0000000000000000000000000000000000000000') {
+      listEl.innerHTML = '<div class="games-empty">Contract not deployed yet.</div>';
+      return;
+    }
+
+    listEl.innerHTML = '<div class="games-loading">Loading leaderboard...</div>';
+
+    try {
+      const entries = await Web3Manager.getLeaderboard();
+
+      if (entries.length === 0) {
+        listEl.innerHTML = '<div class="games-empty">No completed games yet. Be the first!</div>';
+        return;
+      }
+
+      const myAddr = Web3Manager.getAccount().toLowerCase();
+      listEl.innerHTML = '';
+
+      entries.forEach((e, i) => {
+        const isMe = e.address.toLowerCase() === myAddr;
+        const medals = ['🥇','🥈','🥉'];
+        const rank = medals[i] || `#${i + 1}`;
+        const row = document.createElement('div');
+        row.className = 'lb-row' + (isMe ? ' lb-row-me' : '');
+        row.innerHTML = `
+          <span class="lb-rank">${rank}</span>
+          <span class="lb-addr">${Web3Manager.shortenAddress(e.address)}${isMe ? ' <span class="history-you-badge">YOU</span>' : ''}</span>
+          <span class="lb-wins">${e.wins} WIN${e.wins !== 1 ? 'S' : ''}</span>
+          <span class="lb-eth">+${e.totalEth} ETH</span>
+        `;
+        listEl.appendChild(row);
+      });
+    } catch (err) {
+      listEl.innerHTML = '<div class="games-empty">Error: ' + (err.message || '') + '</div>';
     }
   }
 

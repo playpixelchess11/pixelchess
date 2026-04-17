@@ -149,6 +149,27 @@ const Web3Manager = (() => {
       .reverse();
   }
 
+  // ── Leaderboard ─────────────────────────────────────────────────────────────
+  async function getLeaderboard() {
+    if (!contract) throw new Error("Contract not deployed yet");
+    const LOOKBACK = 50000;
+    const endedEvents = await contract.queryFilter(contract.filters.GameEnded(), -LOOKBACK);
+    const map = {};
+    endedEvents.forEach(e => {
+      const addr = e.args.winner.toLowerCase();
+      if (!map[addr]) map[addr] = { address: e.args.winner, wins: 0, totalWei: ethers.BigNumber.from(0) };
+      map[addr].wins++;
+      map[addr].totalWei = map[addr].totalWei.add(e.args.payout);
+    });
+    return Object.values(map)
+      .map(p => ({
+        address:  p.address,
+        wins:     p.wins,
+        totalEth: parseFloat(ethers.utils.formatEther(p.totalWei)).toFixed(4),
+      }))
+      .sort((a, b) => parseFloat(b.totalEth) - parseFloat(a.totalEth));
+  }
+
   // ── Get Game Data ───────────────────────────────────────────────────────────
   async function getGame(gameId) {
     if (!contract) throw new Error("Contract not deployed yet");
@@ -181,6 +202,7 @@ const Web3Manager = (() => {
     refundTimeout,
     getGame,
     getOpenGames,
+    getLeaderboard,
     getMatchHistory,
     getBalance,
     shortenAddress,

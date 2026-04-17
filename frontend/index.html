@@ -16,6 +16,31 @@
 </head>
 <body>
 
+<!-- ══ GLOBAL NAV ══ -->
+<nav class="global-nav">
+  <a href="#" class="logo gnav-logo" id="gnav-home">
+    <span class="logo-icon">♟</span>
+    <div>
+      <span class="logo-text">PIXELCHESS</span>
+      <span class="logo-sub">ON BASE NETWORK</span>
+    </div>
+  </a>
+  <div class="gnav-tabs">
+    <button class="gnav-btn active" data-nav="landing">HOME</button>
+    <button class="gnav-btn" data-nav="lobby">PLAY</button>
+    <button class="gnav-btn" data-nav="leaderboard">LEADERBOARD</button>
+    <a href="https://playpixelchess.gitbook.io/playpixelchess-docs/" target="_blank" rel="noopener" class="gnav-btn gnav-docs">DOCS</a>
+  </div>
+  <div class="gnav-right">
+    <div class="wallet-pill wallet-status gnav-wallet">
+      <span class="wallet-dot"></span>
+      <span class="wallet-address">NOT CONNECTED</span>
+    </div>
+    <span class="balance-chip gnav-balance" style="display:none">0 ETH</span>
+    <button id="btn-connect-nav" class="btn btn-outline gnav-connect">CONNECT WALLET</button>
+  </div>
+</nav>
+
 <!-- ══ FLOATING PIXEL PIECES BACKGROUND ══ -->
 <div class="pixel-bg" aria-hidden="true">
   <span class="floater f1">♟</span>
@@ -32,23 +57,6 @@
      SCREEN 1 — LANDING
 ══════════════════════════════════════ -->
 <section id="screen-landing" class="screen active">
-  <!-- HEADER -->
-  <header class="header">
-    <a href="#" class="logo">
-      <span class="logo-icon">♟</span>
-      <div>
-        <span class="logo-text">PIXELCHESS</span>
-        <span class="logo-sub">ON BASE NETWORK</span>
-      </div>
-    </a>
-    <nav class="header-right">
-      <a href="https://twitter.com/playpixelchess" target="_blank" rel="noopener" class="btn btn-ghost">
-        𝕏 @playpixelchess
-      </a>
-      <a href="https://playpixelchess.gitbook.io/playpixelchess-docs/" id="docs-link" target="_blank" rel="noopener" class="btn btn-ghost">📖 DOCS</a>
-      <button id="btn-connect-landing" class="btn btn-outline">CONNECT WALLET</button>
-    </nav>
-  </header>
 
   <!-- HERO -->
   <div class="hero">
@@ -77,7 +85,7 @@
       </div>
 
       <div class="hero-cta">
-        <button id="btn-connect-landing-2" class="btn btn-gold btn-lg">
+        <button id="btn-connect-hero" class="btn btn-gold btn-lg">
           ▶ CONNECT &amp; PLAY
         </button>
       </div>
@@ -164,22 +172,6 @@
      SCREEN 2 — LOBBY
 ══════════════════════════════════════ -->
 <section id="screen-lobby" class="screen">
-  <header class="header">
-    <a href="#" class="logo" onclick="showScreen('landing'); return false;">
-      <span class="logo-icon">♟</span>
-      <div>
-        <span class="logo-text">PIXELCHESS</span>
-        <span class="logo-sub">ON BASE NETWORK</span>
-      </div>
-    </a>
-    <div class="header-right">
-      <div class="wallet-pill wallet-status">
-        <span class="wallet-dot"></span>
-        <span class="wallet-address">NOT CONNECTED</span>
-      </div>
-      <span id="wallet-balance" class="balance-chip">0 ETH</span>
-    </div>
-  </header>
 
   <div class="lobby-wrap">
     <!-- MAIN TABS -->
@@ -277,22 +269,6 @@
      SCREEN 3 — WAITING FOR OPPONENT
 ══════════════════════════════════════ -->
 <section id="screen-waiting" class="screen">
-  <header class="header">
-    <a href="#" class="logo" onclick="showScreen('lobby'); return false;">
-      <span class="logo-icon">♟</span>
-      <div>
-        <span class="logo-text">PIXELCHESS</span>
-        <span class="logo-sub">ON BASE NETWORK</span>
-      </div>
-    </a>
-    <div class="header-right">
-      <div class="wallet-pill wallet-status connected">
-        <span class="wallet-dot"></span>
-        <span class="wallet-address">NOT CONNECTED</span>
-      </div>
-      <span class="balance-chip">0 ETH</span>
-    </div>
-  </header>
   <div class="waiting-content">
     <div class="waiting-box">
       <div class="waiting-icon">⏳</div>
@@ -319,16 +295,9 @@
      SCREEN 4 — GAME
 ══════════════════════════════════════ -->
 <section id="screen-game" class="screen">
-  <header class="header">
-    <a href="#" class="logo"><span class="logo-icon">♟</span><span class="logo-text">PIXELCHESS</span></a>
-    <div class="header-right">
-      <div class="wallet-pill wallet-status connected">
-        <span class="wallet-dot"></span>
-        <span class="wallet-address">NOT CONNECTED</span>
-      </div>
-      <button id="btn-resign" class="btn btn-danger-sm">RESIGN</button>
-    </div>
-  </header>
+  <div class="header" style="justify-content:flex-end">
+    <button id="btn-resign" class="btn btn-danger-sm">RESIGN</button>
+  </div>
   <div class="game-layout">
     <aside class="side-panel">
       <div class="panel-title">⚔ GAME INFO</div>
@@ -352,6 +321,28 @@
       <div class="panel-title">📋 MOVES</div>
       <div id="move-history"></div>
     </aside>
+  </div>
+  <footer class="footer">
+    <span>PIXELCHESS — BASE NETWORK</span>
+    <div class="footer-links">
+      <a href="https://twitter.com/playpixelchess" target="_blank">𝕏 @playpixelchess</a>
+    </div>
+  </footer>
+</section>
+
+<!-- ══════════════════════════════════════
+     SCREEN 5 — LEADERBOARD
+══════════════════════════════════════ -->
+<section id="screen-leaderboard" class="screen">
+  <div class="lb-wrap">
+    <div class="lb-header">
+      <h2 class="lb-title">🏆 LEADERBOARD</h2>
+      <p class="lb-sub">Top players by total ETH won — live on Base</p>
+      <button id="btn-refresh-lb" class="btn btn-ghost">↻ REFRESH</button>
+    </div>
+    <div id="lb-list" class="lb-list">
+      <div class="games-empty">Connect wallet and click refresh to load leaderboard.</div>
+    </div>
   </div>
   <footer class="footer">
     <span>PIXELCHESS — BASE NETWORK</span>
