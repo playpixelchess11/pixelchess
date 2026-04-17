@@ -478,6 +478,10 @@ const App = (() => {
     const winEl = document.getElementById('game-win-amount');
     if (winEl) winEl.textContent = (selectedWager * 1.9).toFixed(4) + ' ETH';
     showScreen('game');
+    Web3Manager.getBalance().then(bal => {
+      const el = document.getElementById('game-balance');
+      if (el) el.textContent = bal;
+    });
     ChessBoard.init(game, playerColor, handlePlayerMove);
     updateMoveHistory();
     updateGameStatus();
