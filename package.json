@@ -1,0 +1,22 @@
+{
+  "name": "pixelchess",
+  "version": "1.0.0",
+  "description": "On-chain pixel chess with ETH wagering on Base",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network base",
+    "deploy:testnet": "hardhat run scripts/deploy.js --network base-sepolia",
+    "verify": "hardhat verify --network base",
+    "dev": "npx serve frontend -p 3000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.2",
+    "dotenv": "^17.4.2",
+    "hardhat": "^2.28.6"
+  }
+}

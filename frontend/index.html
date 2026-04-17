@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PIXELCHESS — Player vs Player Chess. Win Real ETH on Base.</title>
+  <meta name="description" content="Challenge real players to pixel art chess on Base. Both players stake ETH — winner takes 1.9×. No sign-up. No AI. Just pure PvP." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@playpixelchess" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+  <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
+</head>
+<body>
+
+<!-- ══ FLOATING PIXEL PIECES BACKGROUND ══ -->
+<div class="pixel-bg" aria-hidden="true">
+  <span class="floater f1">♟</span>
+  <span class="floater f2">♞</span>
+  <span class="floater f3">♜</span>
+  <span class="floater f4">♝</span>
+  <span class="floater f5">♛</span>
+  <span class="floater f6">♚</span>
+  <span class="floater f7">♟</span>
+  <span class="floater f8">♞</span>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 — LANDING
+══════════════════════════════════════ -->
+<section id="screen-landing" class="screen active">
+  <!-- HEADER -->
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-icon">♟</span>
+      <div>
+        <span class="logo-text">PIXELCHESS</span>
+        <span class="logo-sub">ON BASE NETWORK</span>
+      </div>
+    </a>
+    <nav class="header-right">
+      <a href="https://twitter.com/playpixelchess" target="_blank" rel="noopener" class="btn btn-ghost">
+        𝕏 @playpixelchess
+      </a>
+      <a href="https://playpixelchess.gitbook.io/playpixelchess-docs/" id="docs-link" target="_blank" rel="noopener" class="btn btn-ghost">📖 DOCS</a>
+      <button id="btn-connect-landing" class="btn btn-outline">CONNECT WALLET</button>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="dot-green"></span> LIVE ON BASE MAINNET
+      </div>
+
+      <h1 class="hero-title">
+        <span class="title-pixel">PIXEL</span><span class="title-chess">CHESS</span>
+      </h1>
+
+      <p class="hero-tagline">CHALLENGE FRIENDS.<br/>WIN REAL ETH.</p>
+
+      <p class="hero-desc">
+        Challenge a friend to a pixel chess match on Base.<br/>
+        Stake ETH, beat your opponent, winner gets 1.9× automatically.
+      </p>
+
+      <div class="hero-badges">
+        <span class="badge">⛓ BASE</span>
+        <span class="badge">⚔ PVP</span>
+        <span class="badge">💰 1.9× WIN</span>
+        <span class="badge">🎮 PIXEL ART</span>
+      </div>
+
+      <div class="hero-cta">
+        <button id="btn-connect-landing-2" class="btn btn-gold btn-lg">
+          ▶ CONNECT &amp; PLAY
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hstat">
+          <span class="hstat-val">1.9×</span>
+          <span class="hstat-lbl">WIN MULTIPLIER</span>
+        </div>
+        <div class="hstat-div"></div>
+        <div class="hstat">
+          <span class="hstat-val">5%</span>
+          <span class="hstat-lbl">HOUSE FEE</span>
+        </div>
+        <div class="hstat-div"></div>
+        <div class="hstat">
+          <span class="hstat-val">PvP</span>
+          <span class="hstat-lbl">PLAYER VS PLAYER</span>
+        </div>
+        <div class="hstat-div"></div>
+        <div class="hstat">
+          <span class="hstat-val">BASE</span>
+          <span class="hstat-lbl">NETWORK</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — PIXEL CHESS BOARD PREVIEW -->
+    <div class="hero-right">
+      <div class="board-preview-wrap">
+        <div class="board-preview-label">PLAYER vs PLAYER — ON BASE</div>
+        <div class="board-preview" id="preview-board"></div>
+        <div class="board-preview-footer">
+          <span class="thinking-dot"></span>
+          <span class="thinking-dot d2"></span>
+          <span class="thinking-dot d3"></span>
+          WAITING FOR MOVE...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <h2 class="how-title">HOW IT WORKS</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <div class="how-icon">🔗</div>
+        <div class="how-head">CONNECT WALLET</div>
+        <p class="how-desc">Connect MetaMask on Base network. No sign-up required.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <div class="how-icon">💰</div>
+        <div class="how-head">STAKE YOUR BET</div>
+        <p class="how-desc">Choose from 0.005–0.05 ETH (~$10–$100). Locked in smart contract.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <div class="how-icon">♟</div>
+        <div class="how-head">FIND YOUR MATCH</div>
+        <p class="how-desc">Use Find Match to auto-pair, or browse the lobby and pick your opponent.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">04</div>
+        <div class="how-icon">🏆</div>
+        <div class="how-head">WINNER GETS PAID</div>
+        <p class="how-desc">Beat your opponent and win 1.9× your stake, paid out on Base instantly.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>© 2025 PIXELCHESS — BASE NETWORK</span>
+    <div class="footer-links">
+      <a href="https://twitter.com/playpixelchess" target="_blank">𝕏 Twitter</a>
+      <a href="https://basescan.org/address/0xCa16bb6c3cedA37C2f99eAfD661066621330E8d1#code" target="_blank" id="footer-contract-link">Contract ↗</a>
+    </div>
+  </footer>
+</section>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2 — LOBBY
+══════════════════════════════════════ -->
+<section id="screen-lobby" class="screen">
+  <header class="header">
+    <a href="#" class="logo" onclick="showScreen('landing'); return false;">
+      <span class="logo-icon">♟</span>
+      <div>
+        <span class="logo-text">PIXELCHESS</span>
+        <span class="logo-sub">ON BASE NETWORK</span>
+      </div>
+    </a>
+    <div class="header-right">
+      <div class="wallet-pill wallet-status">
+        <span class="wallet-dot"></span>
+        <span class="wallet-address">NOT CONNECTED</span>
+      </div>
+      <span id="wallet-balance" class="balance-chip">0 ETH</span>
+    </div>
+  </header>
+
+  <div class="lobby-wrap">
+    <!-- MAIN TABS -->
+    <div class="lobby-tabs">
+      <button class="lobby-tab-btn active" data-tab="findmatch">⚡ FIND MATCH</button>
+      <button class="lobby-tab-btn" data-tab="browse">🏟 BROWSE LOBBY</button>
+    </div>
+
+    <!-- ── TAB: FIND MATCH ── -->
+    <div id="tab-findmatch" class="lobby-tab-content">
+      <div class="fm-layout">
+        <div class="fm-left">
+          <h2 class="section-title">💰 SELECT WAGER</h2>
+          <div class="wager-grid">
+            <button class="wager-btn" data-wager="0.005">0.005<br/><span>~$10</span></button>
+            <button class="wager-btn" data-wager="0.01">0.01<br/><span>~$20</span></button>
+            <button class="wager-btn" data-wager="0.025">0.025<br/><span>~$50</span></button>
+            <button class="wager-btn" data-wager="0.05">0.05<br/><span>~$100</span></button>
+          </div>
+          <div class="summary-box">
+            <div class="summary-row"><span>YOUR WAGER</span><span class="val selected-wager-display">0.005 ETH</span></div>
+            <div class="summary-row"><span>IF YOU WIN</span><span class="val win potential-win-display">0.0095 ETH</span></div>
+            <div class="summary-row"><span>MULTIPLIER</span><span class="val">1.9×</span></div>
+            <div class="summary-row"><span>YOU PLAY AS</span><span class="val">♔ WHITE</span></div>
+            <div class="summary-row"><span>NETWORK</span><span class="val">BASE MAINNET</span></div>
+          </div>
+          <button id="btn-find-match" class="btn btn-gold btn-full btn-lg">⚡ FIND MATCH</button>
+          <p class="lobby-note">Auto-matches you with a waiting opponent. If none found, you appear in lobby.</p>
+        </div>
+        <div class="fm-right">
+          <!-- idle state -->
+          <div id="fm-idle" class="fm-state">
+            <div class="fm-idle-icon">⚔</div>
+            <div class="fm-idle-title">READY TO PLAY?</div>
+            <p class="fm-idle-desc">Select a wager and click Find Match. We'll instantly match you with an opponent — or list your game in the lobby if no one is available.</p>
+          </div>
+          <!-- searching state -->
+          <div id="fm-searching" class="fm-state" style="display:none">
+            <div class="fm-search-icon">
+              <span class="thinking-dot"></span>
+              <span class="thinking-dot d2"></span>
+              <span class="thinking-dot d3"></span>
+            </div>
+            <div class="fm-search-title">SEARCHING FOR OPPONENT...</div>
+            <p class="fm-search-desc">Checking for open games with <span id="fm-wager-label">0.005</span> ETH wager...</p>
+          </div>
+          <!-- waiting state -->
+          <div id="fm-waiting" class="fm-state" style="display:none">
+            <div class="fm-wait-icon">⏳</div>
+            <div class="fm-wait-title">WAITING IN LOBBY</div>
+            <p class="fm-wait-desc">Your game is listed. Wager locked: <span id="fm-locked-wager" class="fm-wager-highlight">— ETH</span></p>
+            <div class="fm-wait-dots">
+              <span class="thinking-dot"></span>
+              <span class="thinking-dot d2"></span>
+              <span class="thinking-dot d3"></span>
+            </div>
+            <p class="fm-wait-note">⚠ Refund available after 30 min if no match.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: BROWSE LOBBY ── -->
+    <div id="tab-browse" class="lobby-tab-content" style="display:none">
+      <div class="browse-header">
+        <span class="section-title" style="margin:0">🏟 OPEN GAMES</span>
+        <button id="btn-refresh-games" class="btn btn-ghost">↻ REFRESH</button>
+      </div>
+      <div id="open-games-list" class="open-games-list">
+        <div class="games-empty">Connect wallet and click refresh to load open games.</div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+    <span>PIXELCHESS — BASE NETWORK</span>
+    <div class="footer-links">
+      <a href="https://twitter.com/playpixelchess" target="_blank">𝕏 @playpixelchess</a>
+    </div>
+  </footer>
+</section>
+
+<!-- ══════════════════════════════════════
+     SCREEN 3 — WAITING FOR OPPONENT
+══════════════════════════════════════ -->
+<section id="screen-waiting" class="screen">
+  <header class="header">
+    <a href="#" class="logo" onclick="showScreen('lobby'); return false;">
+      <span class="logo-icon">♟</span>
+      <div>
+        <span class="logo-text">PIXELCHESS</span>
+        <span class="logo-sub">ON BASE NETWORK</span>
+      </div>
+    </a>
+    <div class="header-right">
+      <div class="wallet-pill wallet-status connected">
+        <span class="wallet-dot"></span>
+        <span class="wallet-address">NOT CONNECTED</span>
+      </div>
+      <span class="balance-chip">0 ETH</span>
+    </div>
+  </header>
+  <div class="waiting-content">
+    <div class="waiting-box">
+      <div class="waiting-icon">⏳</div>
+      <h2 class="waiting-title">WAITING FOR OPPONENT</h2>
+      <div class="waiting-wager-row">
+        WAGER LOCKED: <span id="waiting-wager" class="waiting-wager-val">— ETH</span>
+      </div>
+      <p class="waiting-desc">Share this invite link with your opponent:</p>
+      <div class="waiting-link-row">
+        <input id="waiting-invite-link" class="waiting-link-input" type="text" readonly />
+        <button id="btn-copy-invite" class="btn btn-outline">COPY</button>
+      </div>
+      <div class="waiting-pulse">
+        <span class="thinking-dot"></span>
+        <span class="thinking-dot d2"></span>
+        <span class="thinking-dot d3"></span>
+      </div>
+      <p class="waiting-note">⚠ Game locked in contract. If no opponent joins within 30 min, call refundTimeout to recover ETH.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SCREEN 4 — GAME
+══════════════════════════════════════ -->
+<section id="screen-game" class="screen">
+  <header class="header">
+    <a href="#" class="logo"><span class="logo-icon">♟</span><span class="logo-text">PIXELCHESS</span></a>
+    <div class="header-right">
+      <div class="wallet-pill wallet-status connected">
+        <span class="wallet-dot"></span>
+        <span class="wallet-address">NOT CONNECTED</span>
+      </div>
+      <button id="btn-resign" class="btn btn-danger-sm">RESIGN</button>
+    </div>
+  </header>
+  <div class="game-layout">
+    <aside class="side-panel">
+      <div class="panel-title">⚔ GAME INFO</div>
+      <div class="wager-display">
+        <div class="wager-amount" id="game-wager">— ETH</div>
+        <div class="wager-sub">WAGER LOCKED</div>
+      </div>
+      <div id="game-status" class="status-text status-player">YOUR TURN</div>
+      <div id="ai-thinking" class="ai-thinking" style="display:none">
+        <span class="think-label">OPPONENT THINKING</span>
+        <div class="think-bar"><div class="think-fill"></div></div>
+      </div>
+      <div class="info-row"><span class="info-label">NETWORK</span><span class="info-value">BASE</span></div>
+      <div class="info-row"><span class="info-label">WIN</span><span class="info-value win-color" id="game-win-amount">— ETH</span></div>
+      <div class="balance-bar">BAL: <span id="game-balance">0</span> ETH</div>
+    </aside>
+    <main class="board-container">
+      <div class="board-wrapper"><div id="chessboard"></div></div>
+    </main>
+    <aside class="side-panel">
+      <div class="panel-title">📋 MOVES</div>
+      <div id="move-history"></div>
+    </aside>
+  </div>
+  <footer class="footer">
+    <span>PIXELCHESS — BASE NETWORK</span>
+    <div class="footer-links">
+      <a href="https://twitter.com/playpixelchess" target="_blank">𝕏 @playpixelchess</a>
+    </div>
+  </footer>
+</section>
+
+<!-- MODAL -->
+<div id="modal-gameover" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-icon" id="gameover-icon">🏆</div>
+    <h2 class="modal-title" id="gameover-title">CHECKMATE!</h2>
+    <p class="modal-sub" id="gameover-subtitle">Processing...</p>
+    <div class="modal-buttons">
+      <button id="btn-new-game" class="btn btn-gold">▶ NEW GAME</button>
+      <a href="https://twitter.com/intent/tweet?text=I%20just%20played%20%40playpixelchess!%20%23PIXELCHESS" target="_blank" class="btn btn-outline">SHARE</a>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/chess-board.js"></script>
+<script src="js/web3.js"></script>
+<script src="js/app.js"></script>
+<script>
+// Build preview board on landing page
+(function buildPreview() {
+  const el = document.getElementById('preview-board');
+  if (!el) return;
+  const startPos = [
+    ['♜','♞','♝','♛','♚','♝','♞','♜'],
+    ['♟','♟','♟','♟','♟','♟','♟','♟'],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','♙','','',''],
+    ['','','♘','','','','',''],
+    ['♙','♙','♙','♙','','♙','♙','♙'],
+    ['♖','♘','♗','♕','♔','♗','','♖'],
+  ];
+  startPos.forEach((row, r) => {
+    row.forEach((piece, c) => {
+      const sq = document.createElement('div');
+      sq.className = 'prev-sq ' + ((r + c) % 2 === 0 ? 'prev-light' : 'prev-dark');
+      if (piece) {
+        const p = document.createElement('span');
+        p.className = 'prev-piece ' + (r < 2 ? 'bp' : 'wp');
+        p.textContent = piece;
+        sq.appendChild(p);
+      }
+      el.appendChild(sq);
+    });
+  });
+})();
+
+// Update footer contract link
+const link = document.getElementById('footer-contract-link');
+if (link && CONFIG && CONFIG.CONTRACT_ADDRESS !== '0x0000000000000000000000000000000000000000') {
+  link.href = CONFIG.CHAIN_EXPLORER + '/address/' + CONFIG.CONTRACT_ADDRESS;
+}
+</script>
+</body>
+</html>
