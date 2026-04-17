@@ -267,9 +267,20 @@ const App = (() => {
     return 'pc' + gameId.slice(2, 18);
   }
 
+  const PEER_CONFIG = {
+    config: {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'stun:stun2.l.google.com:19302' },
+        { urls: 'stun:global.stun.twilio.com:3478' },
+      ]
+    }
+  };
+
   function setupCreatorPeer(gameId) {
     const peerId = getPeerId(gameId);
-    peer = new Peer(peerId);
+    peer = new Peer(peerId, PEER_CONFIG);
     peer.on('open', () => {});
     peer.on('connection', connection => {
       conn = connection;
@@ -280,19 +291,31 @@ const App = (() => {
       conn.on('data', handlePeerData);
       conn.on('close', () => { if (gameActive) showToast('⚠️ Opponent disconnected'); });
     });
-    peer.on('error', err => showToast('❌ P2P error: ' + err.type));
+    peer.on('error', err => {
+      showToast('❌ P2P error: ' + err.type);
+      if (err.type === 'unavailable-id') {
+        setTimeout(() => setupCreatorPeer(gameId), 2000);
+      }
+    });
   }
 
   function setupJoinerPeer(gameId) {
     const peerId = getPeerId(gameId);
-    peer = new Peer();
+    peer = new Peer(undefined, PEER_CONFIG);
     peer.on('open', () => {
-      conn = peer.connect(peerId);
+      conn = peer.connect(peerId, { reliable: true });
       conn.on('open', () => showToast('✅ Connected! Game starting...'));
       conn.on('data', handlePeerData);
       conn.on('close', () => { if (gameActive) showToast('⚠️ Opponent disconnected'); });
+      conn.on('error', () => showToast('❌ Connection error. Try rejoining.'));
     });
-    peer.on('error', err => showToast('❌ P2P error: ' + err.type));
+    peer.on('error', err => {
+      showToast('❌ P2P error: ' + err.type);
+      if (err.type === 'peer-unavailable') {
+        showToast('⏳ Waiting for opponent to connect...');
+        setTimeout(() => setupJoinerPeer(gameId), 3000);
+      }
+    });
   }
 
   function handlePeerData(data) {
